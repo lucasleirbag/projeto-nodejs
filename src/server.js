@@ -7,7 +7,6 @@ dotenv.config();
 
 const app = express();
 
-// Configuração do Helmet para ajustar a CSP
 app.use(helmet({
   contentSecurityPolicy: {
     directives: {
@@ -22,12 +21,13 @@ app.use(helmet({
 app.use(cors());
 app.use(express.json());
 
-// Rota de saúde
 app.get('/api/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// Suas rotas aqui
+app.get('/', (req, res) => {
+  res.send('Backend está rodando');
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
