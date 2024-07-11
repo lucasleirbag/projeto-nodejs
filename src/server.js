@@ -22,6 +22,13 @@ app.use(helmet({
 app.use(cors());
 app.use(express.json());
 
+// Rota de saúde
+app.get('/api/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// Suas rotas aqui
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
