@@ -1,22 +1,28 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+const helmet = require('helmet');
 const cors = require('cors');
-const produtoRoutes = require('./api/routes/produtoRoutes');
-const errorHandler = require('./api/middlewares/errorHandler');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 
-// Configurar CORS
+// Configuração do Helmet para ajustar a CSP
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https://projeto-nodejs-kw74.vercel.app"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+    },
+  },
+}));
+
 app.use(cors());
-
-app.use(bodyParser.json());
-app.use('/api', produtoRoutes);
-
-// Middleware de tratamento de erros
-app.use(errorHandler);
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
