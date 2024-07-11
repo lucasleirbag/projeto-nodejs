@@ -1,11 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const produtoRoutes = require('./api/routes/produtoRoutes');
+const errorHandler = require('./api/middlewares/errorHandler');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use('/api', produtoRoutes);
+
+// Middleware de tratamento de erros
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 

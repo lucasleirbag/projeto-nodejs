@@ -1,5 +1,5 @@
 const { validationResult } = require('express-validator');
-const ProdutoRepository = require('../../infrastructure/repositories/ProdutoRepository.js');
+const ProdutoRepository = require('../../infrastructure/repositories/ProdutoRepository');
 const Produto = require('../../domain/Produto');
 const { validateProduto } = require('../validators/produtoValidator');
 
@@ -14,17 +14,17 @@ const handleValidationErrors = (req, res, next) => {
 };
 
 // Controlador para obter todos os produtos
-exports.getAllProdutos = async (req, res) => {
+exports.getAllProdutos = async (req, res, next) => {
   try {
     const produtos = await produtoRepository.getAll();
     res.json(produtos);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
 // Controlador para obter um produto por ID
-exports.getProdutoById = async (req, res) => {
+exports.getProdutoById = async (req, res, next) => {
   try {
     const produto = await produtoRepository.getById(req.params.id);
     if (!produto) {
@@ -32,7 +32,7 @@ exports.getProdutoById = async (req, res) => {
     }
     res.json(produto);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
 
@@ -40,14 +40,14 @@ exports.getProdutoById = async (req, res) => {
 exports.createProduto = [
   validateProduto,
   handleValidationErrors,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { nome, descricao, preco } = req.body;
       const novoProduto = new Produto(null, nome, descricao, preco);
       const produtoId = await produtoRepository.create(novoProduto);
       res.status(201).json({ id: produtoId });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      next(err);
     }
   },
 ];
@@ -56,7 +56,7 @@ exports.createProduto = [
 exports.updateProduto = [
   validateProduto,
   handleValidationErrors,
-  async (req, res) => {
+  async (req, res, next) => {
     try {
       const { nome, descricao, preco } = req.body;
       const produto = new Produto(null, nome, descricao, preco);
@@ -66,13 +66,13 @@ exports.updateProduto = [
       }
       res.status(200).json({ message: 'Produto atualizado com sucesso' });
     } catch (err) {
-      res.status(500).json({ error: err.message });
+      next(err);
     }
   },
 ];
 
 // Controlador para deletar um produto
-exports.deleteProduto = async (req, res) => {
+exports.deleteProduto = async (req, res, next) => {
   try {
     const rowsAffected = await produtoRepository.delete(req.params.id);
     if (rowsAffected === 0) {
@@ -80,6 +80,6 @@ exports.deleteProduto = async (req, res) => {
     }
     res.status(200).json({ message: 'Produto deletado com sucesso' });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    next(err);
   }
 };
