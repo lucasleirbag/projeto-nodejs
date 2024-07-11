@@ -13,7 +13,7 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
-// Controlador para obter todos os produtos
+
 exports.getAllProdutos = async (req, res, next) => {
   try {
     const produtos = await produtoRepository.getAll();
@@ -23,7 +23,7 @@ exports.getAllProdutos = async (req, res, next) => {
   }
 };
 
-// Controlador para obter um produto por ID
+
 exports.getProdutoById = async (req, res, next) => {
   try {
     const produto = await produtoRepository.getById(req.params.id);
@@ -36,7 +36,7 @@ exports.getProdutoById = async (req, res, next) => {
   }
 };
 
-// Controlador para criar um novo produto
+
 exports.createProduto = [
   validateProduto,
   handleValidationErrors,
@@ -52,7 +52,7 @@ exports.createProduto = [
   },
 ];
 
-// Controlador para atualizar um produto existente
+
 exports.updateProduto = [
   validateProduto,
   handleValidationErrors,
@@ -71,7 +71,7 @@ exports.updateProduto = [
   },
 ];
 
-// Controlador para deletar um produto
+
 exports.deleteProduto = async (req, res, next) => {
   try {
     const rowsAffected = await produtoRepository.delete(req.params.id);
