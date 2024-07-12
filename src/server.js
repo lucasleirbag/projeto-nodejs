@@ -1,35 +1,22 @@
 const express = require('express');
-const helmet = require('helmet');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
-
-dotenv.config();
+const produtoRoutes = require('./api/routes/produtoRoutes');
+const errorHandler = require('./api/middlewares/errorHandler');
 
 const app = express();
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      imgSrc: ["'self'", "data:", "https://projeto-nodejs-kw74.vercel.app"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-    },
-  },
-}));
-
+// Configurar CORS
 app.use(cors());
-app.use(express.json());
 
-app.get('/api/health', (req, res) => {
-  res.status(200).send('OK');
-});
+app.use(bodyParser.json());
+app.use('/api', produtoRoutes);
 
-app.get('/', (req, res) => {
-  res.send('Backend está rodando');
-});
+// Middleware de tratamento de erros
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
